@@ -1,0 +1,115 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px 32px 32px;
+  /* Names near the map's edge may stick out a little; never let them cause sideways scroll. */
+  overflow-x: clip;
+  /*
+   * The widest the drawing can be while the whole screen still fits in the window: --chrome
+   * (measured in GameScreen) is the height of everything except the map, 3px is the map box's
+   * border, and 1px is slack for rounding. MapView uses --canvas-width for the drawing itself.
+   */
+  --fit-inner: calc((100dvh - var(--chrome, 310px) - 4px) * var(--map-ratio));
+  --fit-width: calc(var(--fit-inner) + 3px);
+  --canvas-width: min(100%, max(280px, var(--fit-inner)));
+}
+
+/* A quiz with no map: wider, for its three panels of clues */
+.wide {
+  max-width: 1240px;
+}
+
+@media (max-width: 480px) {
+  .screen {
+    padding: 14px 16px 16px;
+  }
+}
+
+/*
+ * The top bar, the map box and the row under it share one width, so their edges line up. It
+ * follows the drawing, but never gets narrower than 720px (unless the column is), so score,
+ * pause and timer stay on one line; a tall map (India) is then centred inside its box.
+ */
+.head,
+.board {
+  width: min(100%, max(720px, var(--fit-width)));
+  margin-inline: auto;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Covers the whole map while paused, so it can't be studied. Only the top bar resumes. */
+.cover {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  background: var(--map-bg);
+  text-align: center;
+}
+
+.pausedIcon {
+  width: 44px;
+  height: 44px;
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.pausedTitle {
+  margin: 0;
+  color: var(--ink);
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.pausedHint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 16px;
+}
+
+/* A small copy of the top bar's Resume button, so it is easy to spot. */
+.key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--white);
+}
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 15px;
+}

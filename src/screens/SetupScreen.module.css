@@ -1,0 +1,368 @@
+/*
+ * A game's own page: its picture, big, beside its name and choices. On phones the picture goes on
+ * top. Things rise into place as the page opens.
+ */
+.screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 2vh, 18px);
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(12px, 2.4vh, 26px) clamp(16px, 3vw, 40px) clamp(16px, 3vh, 32px);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+.back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: -10px;
+  padding: 6px 12px 6px 10px;
+  border-radius: 999px;
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.back:hover {
+  background: var(--white);
+  color: var(--ink);
+}
+
+.lobby {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 56px);
+}
+
+/* The game's picture, as on its card but big, with the chosen level's time limit */
+.picture {
+  position: relative;
+  height: clamp(320px, 66vh, 560px);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  box-shadow: 0 24px 60px rgb(24 33 29 / 0.12);
+  animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.time {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.94);
+  box-shadow: 0 2px 10px rgb(24 33 29 / 0.14);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.time svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+/* The name and the choices */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 3vh, 28px);
+}
+
+.panel > * {
+  animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.panel > :nth-child(2) {
+  animation-delay: 80ms;
+}
+
+.panel > :nth-child(3) {
+  animation-delay: 160ms;
+}
+
+.panel > :nth-child(4) {
+  animation-delay: 240ms;
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(34px, 3.6vw, 52px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 18px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.label {
+  color: var(--ink-2);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Option cards: the chosen one has a saffron edge, a pale saffron wash and a tick */
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  container-type: inline-size;
+  min-height: 72px;
+  padding: 12px 36px 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  background: var(--white);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.option:hover {
+  border-color: #cfcac3;
+  box-shadow: 0 6px 16px rgb(24 33 29 / 0.07);
+  transform: translateY(-1px);
+}
+
+.option[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 3px rgb(191 75 12 / 0.12);
+}
+
+/* Icon to the left of the words; in a narrow card, the icon on top. */
+.optionInner {
+  display: grid;
+  flex: 1;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    'icon name'
+    'icon hint';
+  align-items: center;
+  row-gap: 2px;
+}
+
+@container (max-width: 210px) {
+  .optionInner {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'icon'
+      'name'
+      'hint';
+    align-items: start;
+  }
+
+  .icon {
+    margin: 0 0 10px;
+  }
+}
+
+.icon {
+  grid-area: icon;
+  width: 38px;
+  height: 38px;
+  margin-right: 12px;
+  padding: 8px;
+  border-radius: 10px;
+  background: var(--bg);
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition:
+    background-color 0.2s ease,
+    stroke 0.2s ease;
+}
+
+.option[aria-pressed='true'] .icon {
+  background: var(--accent);
+  stroke: var(--white);
+}
+
+.optionName {
+  grid-area: name;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.hint {
+  grid-area: hint;
+  color: var(--ink-2);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.tick {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  padding: 3px;
+  border-radius: 50%;
+  background: var(--accent);
+  fill: none;
+  stroke: var(--white);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity 0.2s ease,
+    transform 0.25s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+
+.option[aria-pressed='true'] .tick {
+  opacity: 1;
+  transform: none;
+}
+
+.start {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 58px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--accent);
+  box-shadow: 0 12px 26px rgb(191 75 12 / 0.3);
+  color: var(--white);
+  font-size: 19px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.start svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.start:hover {
+  background: var(--accent-dark);
+  box-shadow: 0 16px 30px rgb(191 75 12 / 0.34);
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .picture,
+  .panel > * {
+    animation: none;
+  }
+
+  .back,
+  .option,
+  .icon,
+  .tick,
+  .start {
+    transition: none;
+  }
+
+  .option:hover,
+  .start:hover {
+    transform: none;
+  }
+}
+
+/* Tablets and phones: the picture on top, shorter */
+@media (max-width: 900px) {
+  .lobby {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .picture {
+    height: clamp(200px, 32vh, 300px);
+    border-radius: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Modes in full-width rows, so their words have room */
+  .withIcons {
+    grid-template-columns: 1fr;
+  }
+
+  .title {
+    font-size: 32px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+  }
+
+  .option {
+    min-height: 64px;
+    padding: 10px 32px 10px 12px;
+  }
+
+  .icon {
+    width: 34px;
+    height: 34px;
+    margin-right: 10px;
+    padding: 7px;
+  }
+}

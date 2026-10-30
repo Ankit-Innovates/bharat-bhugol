@@ -1,0 +1,152 @@
+/*
+ * The quiz board: three white panels side by side, each topped with its colour (saffron, blue,
+ * green), filling the height the game screen leaves (--chrome is everything else). Rows share that
+ * height, so the whole quiz is in view on a laptop. On narrow screens the panels stack and scroll.
+ */
+.board {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  height: max(380px, calc(100dvh - var(--chrome, 300px) - 4px));
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 10px 12px 12px;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--tone);
+  border-radius: 14px;
+  background: var(--white);
+}
+
+.nation {
+  --tone: var(--accent);
+  --tone-soft: var(--accent-soft);
+  --tone-line: rgb(191 75 12 / 0.3);
+}
+
+.land {
+  --tone: #1d5fa8;
+  --tone-soft: #eaf2fb;
+  --tone-line: rgb(29 95 168 / 0.3);
+}
+
+.people {
+  --tone: #3f8a3c;
+  --tone-soft: #edf6e8;
+  --tone-line: rgb(63 138 60 / 0.3);
+}
+
+.heading {
+  margin: 0 0 6px;
+  color: var(--tone);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.rows {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: 10px;
+  min-height: 19px;
+  max-height: 34px;
+}
+
+.hint {
+  overflow: hidden;
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The same clue again: quieter */
+.repeat {
+  opacity: 0.5;
+}
+
+/* An answer slot: dashed while open, the panel's colour when found, saffron when missed */
+.answer {
+  display: flex;
+  align-items: center;
+  height: calc(100% - 2px);
+  min-height: 17px;
+  padding: 0 10px;
+  overflow: hidden;
+  border: 1px dashed #d6d1c8;
+  border-radius: 7px;
+  background: #f6f4ef;
+  font-size: 13.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Found: the panel's colour, with a tick */
+.found {
+  justify-content: space-between;
+  gap: 6px;
+  border: 1px solid var(--tone-line);
+  background: var(--tone-soft);
+  color: var(--ink);
+  animation: pop 0.35s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+.found::after {
+  content: '✓';
+  flex: none;
+  color: var(--tone);
+  font-weight: 800;
+}
+
+/* Missed, shown after the round: white, in saffron */
+.missed {
+  border: 1px solid rgb(191 75 12 / 0.4);
+  background: var(--white);
+  color: var(--accent-dark);
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .found {
+    animation: none;
+  }
+}
+
+/* Narrow screens: one panel under another, rows at a fixed height, the page scrolls. */
+@media (max-width: 900px) {
+  .board {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .row {
+    flex: none;
+    height: 30px;
+  }
+}

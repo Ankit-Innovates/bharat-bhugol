@@ -1,0 +1,192 @@
+/*
+ * The home page: the title and a game playing itself side by side, then the game cards, on a faint
+ * map grid (like lines of latitude and longitude) under a soft warm glow. On a laptop it all fits
+ * one screen; the picture heights follow the window's height.
+ */
+.home {
+  position: relative;
+  isolation: isolate;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 3vh, 32px);
+  padding: clamp(12px, 2vh, 32px) clamp(16px, 3vw, 40px) 8px;
+  overflow: hidden;
+  background: radial-gradient(ellipse 60% 50% at 70% 20%, rgb(191 75 12 / 0.1), transparent 75%);
+}
+
+.home::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-position: center -1px;
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 75% 55% at 50% 25%, black 25%, transparent 75%);
+}
+
+/* Things rise into place as the page opens, one after another. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+/* The title and picture, then the cards: centred in the height the window gives them */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(16px, 3vh, 32px);
+}
+
+/* The title and the picture */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 64px);
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.intro > * {
+  animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.intro > :nth-child(2) {
+  animation-delay: 120ms;
+}
+
+/* "Learn the / map / of India", in three big lines; the middle word changes. */
+.title {
+  margin: 0;
+  font-size: clamp(44px, 5.1vw, 80px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.line {
+  display: block;
+}
+
+.topic {
+  display: block;
+  padding-bottom: 0.08em;
+  overflow: hidden;
+}
+
+/* The word, underlined with a hand-drawn stroke; each new one slides up into place */
+.word {
+  position: relative;
+  display: inline-block;
+  color: var(--accent);
+  animation: word-in 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.word::after {
+  content: '';
+  position: absolute;
+  left: 2%;
+  right: 2%;
+  bottom: -0.06em;
+  height: 0.16em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14' preserveAspectRatio='none'%3E%3Cpath d='M3 10C40 3 120 1 197 7' fill='none' stroke='%23bf4b0c' stroke-width='5' stroke-linecap='round' opacity='.45'/%3E%3C/svg%3E")
+    center / 100% 100% no-repeat;
+}
+
+@keyframes word-in {
+  from {
+    opacity: 0;
+    transform: translateY(60%);
+  }
+}
+
+.lead {
+  max-width: 30em;
+  margin: 22px 0 0;
+  color: var(--ink-2);
+  font-size: clamp(16px, 1.3vw, 19px);
+  line-height: 1.5;
+}
+
+/* The game cards */
+
+.tiles {
+  --cover: clamp(130px, 24vh, 240px);
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 18px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+/* Footer: photo credits */
+
+.footer {
+  width: 100%;
+  max-width: 1280px;
+  margin: auto auto 0;
+  color: var(--ink-2);
+  font-size: 13px;
+}
+
+.credits summary {
+  width: fit-content;
+  padding: 4px 0;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.credits ul {
+  margin: 4px 0;
+  padding-left: 18px;
+  line-height: 1.7;
+}
+
+.credits p {
+  margin: 0;
+}
+
+.credits a {
+  color: var(--ink-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro > *,
+  .word {
+    animation: none;
+  }
+}
+
+/* Tablets: three cards a row, and the title above the picture */
+@media (max-width: 1100px) {
+  .tiles {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Phones: one card a row */
+@media (max-width: 640px) {
+  .tiles {
+    --cover: 190px;
+    grid-template-columns: 1fr;
+  }
+}

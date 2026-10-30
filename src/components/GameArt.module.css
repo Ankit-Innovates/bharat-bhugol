@@ -1,0 +1,416 @@
+/*
+ * Card pictures. Each game has its own tint, from the flag's colours: saffron for the states, green
+ * for Madhya Pradesh, navy-blue water for the rivers, warm stone for the monuments.
+ */
+.art {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  container-type: size;
+  background-color: var(--art-bg);
+  background-image: radial-gradient(var(--art-dot) 1px, transparent 1.3px);
+  background-size: 14px 14px;
+}
+
+.india {
+  --art-bg: #fff3e7;
+  --art-dot: rgb(191 75 12 / 0.16);
+}
+
+.mp {
+  --art-bg: #edf5e7;
+  --art-dot: rgb(46 110 52 / 0.16);
+}
+
+.rivers {
+  --art-bg: #e9f1fa;
+  --art-dot: rgb(29 79 145 / 0.14);
+}
+
+.capitals {
+  --art-bg: #fdf5df;
+  --art-dot: rgb(176 128 20 / 0.16);
+}
+
+.dams {
+  --art-bg: #e5f2f3;
+  --art-dot: rgb(20 100 110 / 0.14);
+}
+
+.architecture {
+  --art-bg: #f3ebe0;
+  --art-dot: transparent;
+}
+
+.quiz {
+  --art-bg: #fbfaf6;
+  --art-dot: transparent;
+  background-image: linear-gradient(
+    180deg,
+    #fde3cc 0%,
+    #fff6ee 34%,
+    #fffdf9 50%,
+    #f1f8ec 66%,
+    #d9edcb 100%
+  );
+  background-size: 100% 100%;
+}
+
+.soon {
+  --art-bg: #f1f0eb;
+  --art-dot: rgb(24 33 29 / 0.1);
+}
+
+/* The map: centred, as big as fits in most of the picture's height and width (--ratio is the
+   map's width over its height) */
+.mapBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(92cqw, 88cqh * var(--ratio));
+  aspect-ratio: var(--ratio);
+  transform: translate(-50%, -50%);
+}
+
+.mapBox svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.mapBox path {
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Mosaic tints, light to deep */
+.t0,
+.t1,
+.t2,
+.t3,
+.t4 {
+  stroke: var(--white);
+  stroke-width: 0.8;
+}
+
+.india .t0 {
+  fill: #fde3cc;
+}
+
+.india .t1 {
+  fill: #fbcba1;
+}
+
+.india .t2 {
+  fill: #f7ad76;
+}
+
+.india .t3 {
+  fill: #ef8d4c;
+}
+
+.india .t4 {
+  fill: #de6c28;
+}
+
+.mp .t0 {
+  fill: #d9edcb;
+}
+
+.mp .t1 {
+  fill: #bcdfa5;
+}
+
+.mp .t2 {
+  fill: #9bcb80;
+}
+
+.mp .t3 {
+  fill: #76b161;
+}
+
+.mp .t4 {
+  fill: #4f8f47;
+}
+
+.division {
+  fill: none;
+  stroke: var(--white);
+  stroke-width: 2;
+}
+
+.edge {
+  fill: none;
+  stroke-width: 1.2;
+}
+
+.india .edge {
+  stroke: rgb(140 52 6 / 0.6);
+}
+
+.mp .edge {
+  stroke: rgb(36 84 38 / 0.65);
+}
+
+.rivers .edge {
+  stroke: #8fa6bf;
+}
+
+.capitals .edge {
+  stroke: rgb(140 100 20 / 0.6);
+}
+
+.dams .edge {
+  stroke: #8fb0b6;
+}
+
+/* Capitals: pale land, three states in gold with their capitals, one lit up to be answered */
+.capitalLand,
+.capitalShown,
+.capitalAsked {
+  stroke: #e0cf9f;
+  stroke-width: 0.7;
+}
+
+.capitalLand {
+  fill: #fffdf6;
+}
+
+.capitalShown {
+  fill: #f6d27a;
+}
+
+.capitalAsked {
+  fill: #f2a466;
+}
+
+.capital {
+  position: absolute;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  background: var(--white);
+  box-shadow: 0 2px 6px rgb(24 33 29 / 0.2);
+  color: var(--ink);
+  font-size: clamp(8px, 6cqh, 15px);
+  font-weight: 800;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+/* Dams: navy dots on the rivers */
+.water {
+  fill: none;
+  stroke: #7fb2df;
+  stroke-width: 1;
+  stroke-linecap: round;
+}
+
+.dam {
+  position: absolute;
+  width: max(5px, 3.4cqh);
+  aspect-ratio: 1;
+  border: 1.5px solid var(--white);
+  border-radius: 50%;
+  background: #1d4f91;
+  transform: translate(-50%, -50%);
+}
+
+/* Rivers: pale land, blue water, one river lit up to be named */
+.land {
+  fill: #fbfaf6;
+  stroke: #d6dee8;
+  stroke-width: 0.7;
+}
+
+.river,
+.glow,
+.lit {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.river {
+  stroke: #4b90d4;
+  stroke-width: 1.2;
+}
+
+.major {
+  stroke: #1d5fa8;
+  stroke-width: 2;
+}
+
+.glow {
+  stroke: var(--accent);
+  stroke-opacity: 0.25;
+  stroke-width: 8;
+}
+
+.lit {
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+
+/* A "?" marker, as on a place still to answer */
+.ask,
+.photoAsk {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--white);
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 2px 6px rgb(24 33 29 / 0.3);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.ask {
+  transform: translate(-50%, -50%);
+}
+
+.ask::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ping {
+  75%,
+  100% {
+    opacity: 0;
+    transform: scale(2.1);
+  }
+}
+
+/* Monuments: a collage of three photos, the big one asked */
+.collage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 3px;
+  background: var(--white);
+}
+
+.collage img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: cover;
+}
+
+.collage .big {
+  grid-row: 1 / span 2;
+}
+
+.photoAsk {
+  bottom: 10px;
+  left: 10px;
+}
+
+/* The quiz: a sheet of clues, tilted a touch; sized from the picture (cqw, cqh) */
+.sheet {
+  display: flex;
+  flex-direction: column;
+  gap: 2.6cqh;
+  width: min(84cqw, 150cqh);
+  padding: 4cqh 4cqw 5cqh;
+  border-radius: 12px;
+  background: var(--white);
+  box-shadow: 0 10px 26px rgb(24 33 29 / 0.14);
+  font-size: clamp(9px, 7cqh, 20px);
+  transform: rotate(-2.5deg);
+}
+
+/* Three dots in the flag's colours, along the top */
+.sheetTop {
+  display: flex;
+  gap: 0.35em;
+  margin-bottom: 0.2em;
+}
+
+.sheetTop i {
+  width: 0.55em;
+  height: 0.55em;
+  border-radius: 50%;
+  background: #ef8d4c;
+}
+
+.sheetTop i:nth-child(2) {
+  border: 1px solid #d9d4cc;
+  background: var(--white);
+}
+
+.sheetTop i:nth-child(3) {
+  background: #5f9e55;
+}
+
+.sheetRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 4cqw;
+}
+
+.sheetHint {
+  overflow: hidden;
+  color: var(--ink-2);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sheetAnswer {
+  padding: 0.3em 0.6em;
+  overflow: hidden;
+  border-radius: 0.45em;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sheetOpen {
+  border: 1px dashed #d6d1c8;
+  background: #f6f4ef;
+  color: var(--ink-2);
+}
+
+.saffron {
+  border: 1px solid rgb(191 75 12 / 0.3);
+  background: var(--accent-soft);
+}
+
+.blue {
+  border: 1px solid rgb(29 95 168 / 0.3);
+  background: #eaf2fb;
+}
+
+/* A game to come: one line drawing */
+.icon {
+  width: 34%;
+  max-width: 76px;
+  height: auto;
+  fill: none;
+  stroke: #8b938d;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ask::before {
+    animation: none;
+  }
+}

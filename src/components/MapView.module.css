@@ -1,0 +1,399 @@
+/* The map box. The drawing sits centred inside it in .canvas, which can be narrower than the box
+   when the map is taller than it is wide (India). */
+.map {
+  position: relative;
+  border: 1.5px solid var(--ink);
+  background: var(--map-bg);
+}
+
+.canvas {
+  position: relative;
+  width: var(--canvas-width, 100%);
+  margin-inline: auto;
+}
+
+.svg {
+  display: block;
+  height: auto;
+}
+
+/* SVG layers */
+
+.outline {
+  fill: var(--land);
+  stroke: var(--border);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.region {
+  fill: var(--land);
+  fill-rule: evenodd;
+  stroke: var(--border);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  transition: fill 0.15s ease;
+}
+
+.dense .region {
+  stroke: var(--district-border);
+  stroke-width: 0.9;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .clickable:hover {
+    fill: var(--land-hover);
+  }
+}
+
+.found,
+.found:hover {
+  fill: var(--found);
+}
+
+/* A wrong click: red pops in at once, then fades back out when the flash ends. */
+.wrong,
+.wrong:hover {
+  fill: var(--wrong);
+  transition: none;
+}
+
+.missed,
+.missed:hover {
+  fill: url(#map-hatch);
+}
+
+/* The state lit up to be answered (name mode): saffron, glowing softly */
+.regionCurrent {
+  fill: #f2a466;
+  animation: glow 1.6s ease-in-out infinite;
+}
+
+@keyframes glow {
+  50% {
+    fill: #f9cfa9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .regionCurrent {
+    animation: none;
+  }
+}
+
+.hatchBack {
+  fill: var(--missed-bg);
+}
+
+.hatchStripe {
+  fill: var(--accent);
+}
+
+.overlayLines {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+/* Rivers drawn faintly behind the dams, for bearings */
+.waters {
+  fill: none;
+  stroke: #9fc4e6;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+/* Lines (rivers): blue, darker once named; the one to name is lit up in the accent and pulses. */
+
+.backdrop {
+  fill: none;
+  stroke: var(--backdrop-line);
+  stroke-width: 0.8;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.river {
+  fill: none;
+  stroke: var(--river);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 0.15s ease;
+}
+
+.riverFound {
+  stroke: var(--river-found);
+  stroke-width: 3;
+}
+
+.riverMissed {
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+
+.riverWrong {
+  stroke: var(--wrong);
+  stroke-width: 3.4;
+  transition: none;
+}
+
+.riverCurrent {
+  stroke: var(--accent);
+  stroke-width: 4.5;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    stroke-width: 7;
+    stroke-opacity: 0.65;
+  }
+}
+
+.riverHit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 14;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  pointer-events: stroke;
+}
+
+.riverClickable {
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .riverClickable:hover .river {
+    stroke: var(--river-hover);
+    stroke-width: 3.4;
+  }
+}
+
+/* On phones the map is small: narrower click strips keep clear of the next river. */
+@media (max-width: 480px) {
+  .riverHit {
+    stroke-width: 10;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .riverCurrent {
+    animation: none;
+  }
+}
+
+/* HTML overlay: click rings, names and ? markers */
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Points (monuments): grey until answered, then blue, or orange if missed */
+.dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  transform: translate(-50%, -50%);
+  border: 2px solid var(--white);
+  border-radius: 50%;
+  background: var(--district-border);
+  box-shadow: 0 1px 3px rgb(24 33 29 / 0.35);
+}
+
+.dotFound {
+  background: var(--river-found);
+}
+
+.dotMissed {
+  background: var(--accent);
+}
+
+.dotWrong {
+  background: var(--wrong);
+}
+
+/* In click mode a layer over the map takes the clicks; the dot nearest the pointer grows. */
+.pointHits {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.dotHover {
+  background: var(--river-hover);
+  transform: translate(-50%, -50%) scale(1.4);
+}
+
+.dotCurrent {
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  animation: beat 1.4s ease-in-out infinite;
+}
+
+@keyframes beat {
+  50% {
+    box-shadow: 0 0 0 8px rgb(191 75 12 / 0.25);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dotCurrent {
+    animation: none;
+  }
+}
+
+/* Lines from names that had to move (rivers, monuments) back to their own place */
+.leaders {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.leaders line {
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+
+.leaders circle {
+  fill: var(--ink);
+}
+
+.leaderAlert line {
+  stroke: var(--accent);
+}
+
+.leaderAlert circle {
+  fill: var(--accent);
+}
+
+/* Regions too small to click get a ring around them that counts as the region. */
+.ring {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  transform: translate(-50%, -50%);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: rgba(251, 250, 244, 0.4);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.75);
+}
+
+/* On phones the map is small; smaller rings keep clear of their neighbours' label points. */
+@media (max-width: 480px) {
+  .ring {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.ringClickable {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+@media (hover: hover) {
+  .ringClickable:hover {
+    background: var(--land-hover);
+  }
+}
+
+.ringFound {
+  background: var(--found);
+}
+
+.ringWrong,
+.ringWrong:hover {
+  border-color: var(--wrong);
+  background: var(--wrong);
+}
+
+.ringCurrent {
+  border-color: var(--accent);
+  background: rgb(242 164 102 / 0.85);
+  animation: beat 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ringCurrent {
+    animation: none;
+  }
+}
+
+.ringMissed {
+  border-color: var(--accent);
+  background: repeating-linear-gradient(45deg, var(--accent) 0 2.5px, var(--missed-bg) 2.5px 7px);
+}
+
+.label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  padding: 2px 7px;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  background: var(--white);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.dense .label {
+  padding: 0 4px;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.labelAlert {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--white);
+}
+
+.marker {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  transform: translate(-50%, -50%);
+  border: 2px solid var(--white);
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 1px 3px rgba(24, 33, 29, 0.35);
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.dense .marker {
+  width: 18px;
+  height: 18px;
+  font-size: 11px;
+}

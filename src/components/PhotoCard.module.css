@@ -1,0 +1,65 @@
+/* Sized like the map box it stands in for: as wide as the window's height allows, 4:3. */
+.card {
+  position: relative;
+  width: var(--canvas-width, 100%);
+  aspect-ratio: 4 / 3;
+  margin-inline: auto;
+  overflow: hidden;
+  border: 1.5px solid var(--ink);
+  background: var(--map-bg);
+}
+
+.photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.waiting {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 24px;
+  color: var(--ink-2);
+  font-size: 17px;
+  text-align: center;
+}
+
+/* The monument's name, when the question is where it is */
+.caption {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  margin: 0;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgb(24 33 29 / 0.82);
+  color: var(--white);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.credit {
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  max-width: calc(100% - 20px);
+  margin: 0;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgb(24 33 29 / 0.6);
+  color: var(--white);
+  font-size: 11px;
+}
+
+/* The next photo, loading out of sight */
+.early {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}

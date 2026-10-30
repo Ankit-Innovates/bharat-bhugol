@@ -1,0 +1,17 @@
+/* Header on top, the screen filling the rest of the window. */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  isolation: isolate;
+}
+
+/* Loading and error messages, shown instead of the game. */
+.status {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 64px 24px;
+  font-size: 18px;
+  line-height: 1.45;
+  text-align: center;
+}

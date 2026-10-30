@@ -1,0 +1,346 @@
+/*
+ * The home page's picture: a small game window, tilted a touch, with a photo card behind it and a
+ * river label beside it. --h is its height; everything around the window is placed from it.
+ */
+.demo {
+  --h: clamp(250px, 44vh, 420px);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  height: var(--h);
+}
+
+/* Soft glows behind the window, in the colours of the cards below: saffron, green and blue */
+.glow {
+  position: absolute;
+  z-index: -1;
+  width: calc(var(--h) * 0.75);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(48px);
+  opacity: 0.5;
+  animation: float 14s ease-in-out infinite alternate;
+}
+
+.saffron {
+  top: -6%;
+  left: calc(50% - var(--h) * 0.55);
+  background: #f7ad76;
+}
+
+.green {
+  bottom: -10%;
+  left: calc(50% + var(--h) * 0.05);
+  background: #a6d48d;
+  animation-delay: -5s;
+}
+
+.blue {
+  top: 20%;
+  left: calc(50% + var(--h) * 0.3);
+  width: calc(var(--h) * 0.55);
+  background: #8dbbe8;
+  animation-delay: -9s;
+}
+
+@keyframes float {
+  to {
+    translate: 6% -8%;
+    scale: 1.12;
+  }
+}
+
+/* The game window */
+.window {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  aspect-ratio: 0.9;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--white);
+  box-shadow:
+    0 28px 60px rgb(24 33 29 / 0.16),
+    0 2px 6px rgb(24 33 29 / 0.06);
+  transform: rotate(-1.5deg);
+  animation: arrive 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s backwards;
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(24px) rotate(2deg) scale(0.96);
+  }
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 4px 9px;
+  font-size: 12.5px;
+}
+
+.prompt {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.prompt b {
+  font-weight: 800;
+}
+
+.score,
+.clock {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.clock {
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: var(--bg);
+}
+
+.board {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--map-bg);
+}
+
+/* The map, centred on the board; the pointer and clicks are placed over it in its coordinates. */
+.mapBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 94%;
+  transform: translate(-50%, -50%);
+}
+
+.map {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.region,
+.found,
+.edge {
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.region {
+  fill: var(--land);
+  stroke: var(--district-border);
+  stroke-width: 0.6;
+  transition: fill 0.3s ease;
+}
+
+.found {
+  fill: var(--found);
+  stroke: var(--district-border);
+  stroke-width: 0.6;
+  transition: fill 0.3s ease;
+}
+
+.edge {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+/* The pointer glides to each state; its tip is on the state's label point. */
+.pointer {
+  position: absolute;
+  width: 15px;
+  height: auto;
+  margin: -1px 0 0 -1px;
+  fill: var(--white);
+  stroke: var(--ink);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.25));
+  transition:
+    left 0.75s cubic-bezier(0.45, 0, 0.2, 1),
+    top 0.75s cubic-bezier(0.45, 0, 0.2, 1);
+}
+
+/* A click: a ring that spreads and fades */
+.ripple {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border: 2px solid var(--success);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0.2);
+  animation: ripple 0.7s ease-out forwards;
+}
+
+@keyframes ripple {
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* The last state found, popping up over the window's corner */
+.toast {
+  position: absolute;
+  left: -18px;
+  bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px 7px 8px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--white);
+  box-shadow: 0 10px 24px rgb(24 33 29 / 0.25);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  animation: pop 0.35s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+
+.toast svg {
+  width: 18px;
+  height: 18px;
+  padding: 2px;
+  border-radius: 50%;
+  background: var(--success);
+  fill: none;
+  stroke: var(--white);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.85);
+  }
+}
+
+/* Behind the window: a photo, for Famous architecture */
+.photo {
+  position: absolute;
+  top: 4%;
+  left: calc(50% + var(--h) * 0.45 - 2px);
+  width: 124px;
+  margin: 0;
+  padding: 7px 7px 0;
+  border-radius: 6px;
+  background: var(--white);
+  box-shadow: 0 16px 34px rgb(24 33 29 / 0.18);
+  transform: rotate(8deg);
+  animation: drift-in 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.35s backwards;
+}
+
+.photoImg {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.photo figcaption {
+  padding: 6px 0 8px;
+  color: var(--ink-2);
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Beside it: a river's name, for Rivers of India */
+.river {
+  position: absolute;
+  z-index: 2;
+  top: 24%;
+  right: calc(50% + var(--h) * 0.45 - 34px);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--white);
+  box-shadow: 0 10px 24px rgb(24 33 29 / 0.12);
+  color: #1d5fa8;
+  font-size: 13px;
+  font-weight: 800;
+  animation:
+    drift-in 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.55s backwards,
+    bob 5s ease-in-out 1.6s infinite;
+}
+
+.river svg {
+  width: 22px;
+  height: 11px;
+  fill: none;
+  stroke: #4b90d4;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+@keyframes drift-in {
+  from {
+    opacity: 0;
+    translate: 0 16px;
+  }
+}
+
+@keyframes bob {
+  50% {
+    translate: 0 -6px;
+  }
+}
+
+/* Phones: the window alone, a little smaller */
+@media (max-width: 640px) {
+  .demo {
+    --h: 300px;
+  }
+
+  .photo {
+    display: none;
+  }
+
+  .river {
+    right: auto;
+    left: -4px;
+    top: 18%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow,
+  .window,
+  .toast,
+  .photo,
+  .river,
+  .ripple {
+    animation: none;
+  }
+
+  .pointer,
+  .region,
+  .found {
+    transition: none;
+  }
+}
